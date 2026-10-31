@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اهدایی فیلترشکن کاوه</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%);
+        padding: 20px;
+    }
+
+    .main-title {
+        color: #ffffff;
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 18px;
+        text-align: center;
+        letter-spacing: 1px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 20px rgba(102, 126, 234, 0.3);
+        padding: 0 10px;
+        animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+        from { filter: brightness(1); }
+        to   { filter: brightness(1.3); }
+    }
+
+    .calculator {
+        background: #2b2b3c;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        width: 100%;
+        max-width: 420px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .display-wrapper {
+        background: #1a1a26;
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.4);
+        direction: ltr;
+        text-align: right;
+    }
+
+    .history {
+        font-size: 14px;
+        color: #8a8aa0;
+        min-height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .display {
+        font-size: 42px;
+        font-weight: 300;
+        color: #ffffff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        letter-spacing: 1px;
+        min-height: 54px;
+        line-height: 54px;
+        transition: font-size 0.15s ease;
+    }
+
+    .display.small {
+        font-size: 28px;
+    }
+
+    .display.tiny {
+        font-size: 20px;
+    }
+
+    .memory-indicator {
+        font-size: 11px;
+        color: #6c6c85;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        direction: ltr;
+    }
+
+    .memory-indicator span {
+        color: #ffb74d;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .memory-indicator span.active {
+        opacity: 1;
+    }
+
+    .keypad {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+
+    button {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 500;
+        padding: 16px 4px;
+        color: #ffffff;
+        background: #3a3a4f;
+        transition: all 0.12s ease;
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button:hover {
+        background: #46465e;
+        transform: translateY(-1px);
+    }
+
+    button:active {
+        transform: translateY(1px) scale(0.98);
+        filter: brightness(0.9);
+    }
+
+    button.operator {
+        background: #3f4a6b;
+        color: #8ab4ff;
+    }
+
+    button.operator:hover {
+        background: #4a5680;
+    }
+
+    button.function {
+        background: #35354a;
+        color: #b0b0c8;
+        font-size: 15px;
+    }
+
+    button.function:hover {
+        background: #404058;
+    }
+
+    button.equals {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button.equals:hover {
+        box-shadow: 0 8px 26px rgba(102, 126, 234, 0.55);
+        transform: translateY(-2px);
+    }
+
+    button.clear {
+        background: #8b3a3a;
+        color: #ffcdd2;
+    }
+
+    button.clear:hover {
+        background: #a04545;
+    }
+
+    button.memory {
+        background: #3a3a2f;
+        color: #ffb74d;
+        font-size: 15px;
+    }
+
+    button.memory:hover {
+        background: #4a4a3a;
+    }
+
+    button.num {
+        background: #3a3a4f;
+    }
+
+    /* تب scientific */
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+        background: #1f1f2e;
+        padding: 5px;
+        border-radius: 12px;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 9px 6px;
+        border-radius: 9px;
+        background: transparent;
+        color: #7a7a95;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+        box-shadow: none;
+    }
+
+    .tab-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        transform: none;
+    }
+
+    .tab-btn.active {
+        background: #3a3a4f;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .panel {
+        display: none;
+    }
+
+    .panel.active {
+        display: block;
+    }
+
+    .scientific-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .scientific-grid button {
+        padding: 11px 3px;
+        font-size: 13px;
+        background: #303044;
+        color: #a8a8c0;
+    }
+
+    .scientific-grid button:hover {
+        background: #3b3b55;
+    }
+
+    @media (max-width: 420px) {
+        .main-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .calculator {
+            padding: 16px;
+            border-radius: 18px;
+        }
+        .display {
+            font-size: 34px;
+            min-height: 46px;
+            line-height: 46px;
+        }
+        button {
+            padding: 14px 2px;
+            font-size: 16px;
+        }
+        .scientific-grid button {
+            padding: 9px 2px;
+            font-size: 11px;
+        }
+        .keypad {
+            gap: 8px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1 class="main-title">اهدایی فیلترشکن کاوه</h1>
+
+<div class="calculator">
+    <!-- نمایشگر -->
+    <div class="display-wrapper">
+        <div class="memory-indicator">
+            <span id="memIndicator">M</span>
+            <span id="angleIndicator">DEG</span>
+        </div>
+        <div class="history" id="history">&nbsp;</div>
+        <div class="display" id="display">0</div>
+    </div>
+
+    <!-- تب‌ها -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="standard">استاندارد</button>
+        <button class="tab-btn" data-tab="scientific">علمی</button>
+    </div>
+
+    <!-- پنل استاندارد -->
+    <div class="panel active" id="panel-standard">
+        <div class="keypad">
+            <!-- ردیف حافظه -->
+            <button class="memory" data-action="mc">MC</button>
+            <button class="memory" data-action="mr">MR</button>
+            <button class="memory" data-action="mplus">M+</button>
+            <button class="memory" data-action="mminus">M−</button>
+            <button class="memory" data-action="ms">MS</button>
+
+            <!-- ردیف 1 -->
+            <button class="function" data-action="clear">C</button>
+            <button class="function" data-action="backspace">⌫</button>
+            <button class="function" data-action="percent">%</button>
+            <button class="operator" data-action="divide">÷</button>
+            <button class="function" data-action="sqrt">√</button>
+
+            <!-- ردیف 2 -->
+            <button class="num" data-num="7">7</button>
+            <button class="num" data-num="8">8</button>
+            <button class="num" data-num="9">9</button>
+            <button class="operator" data-action="multiply">×</button>
+            <button class="function" data-action="power">x²</button>
+
+            <!-- ردیف 3 -->
+            <button class="num" data-num="4">4</button>
+            <button class="num" data-num="5">5</button>
+            <button class="num" data-num="6">6</button>
+            <button class="operator" data-action="subtract">−</button>
+            <button class="function" data-action="reciprocal">1/x</button>
+
+            <!-- ردیف 4 -->
+            <button class="num" data-num="1">1</button>
+            <button class="num" data-num="2">2</button>
+            <button class="num" data-num="3">3</button>
+            <button class="operator" data-action="add">+</button>
+            <button class="function" data-action="negate">±</button>
+
+            <!-- ردیف 5 -->
+            <button class="num" data-num="0">0</button>
+            <button class="num" data-num=".">.</button>
+            <button class="function" data-action="exp">e</button>
+            <button class="equals" data-action="equals" style="grid-column: span 2;">=</button>
+        </div>
+    </div>
+
+    <!-- پنل علمی -->
+    <div class="panel" id="panel-scientific">
+        <div class="scientific-grid">
+            <button data-sci="sin">sin</button>
+            <button data-sci="cos">cos</button>
+            <button data-sci="tan">tan</button>
+            <button data-sci="log">log</button>
+            <button data-sci="ln">ln</button>
+
+            <button data-sci="asin">sin⁻¹</button>
+            <button data-sci="acos">cos⁻¹</button>
+            <button data-sci="atan">tan⁻¹</button>
+            <button data-sci="pow">xʸ</button>
+            <button data-sci="root">ʸ√x</button>
+
+            <button data-sci="fact">n!</button>
+            <button data-sci="pi">π</button>
+            <button data-sci="e">e</button>
+            <button data-sci="abs">|x|</button>
+            <button data-sci="exp10">10ˣ</button>
+
+            <button data-sci="angle">DEG</button>
+            <button data-sci="round">round</button>
+            <button data-sci="floor">⌊x⌋</button>
+            <button data-sci="ceil">⌈x⌉</button>
+            <button data-sci="rand">Rnd</button>
+        </div>
+
+        <div class="keypad">
+            <button class="memory" data-action="mc">MC</button>
+            <button class="memory" data-action="mr">MR</button>
+            <button class="memory" data-action="mplus">M+</button>
+            <button class="memory" data-action="mminus">M−</button>
+            <button class="memory" data-action="ms">MS</button>
+
+            <button class="function" data-action="clear">C</button>
+            <button class="function" data-action="backspace">⌫</button>
+            <button class="function" data-action="percent">%</button>
+            <button class="operator" data-action="divide">÷</button>
+            <button class="function" data-action="sqrt">√</button>
+
+            <button class="num" data-num="7">7</button>
+            <button class="num" data-num="8">8</button>
+            <button class="num" data-num="9">9</button>
+            <button class="operator" data-action="multiply">×</button>
+            <button class="function" data-action="power">x²</button>
+
+            <button class="num" data-num="4">4</button>
+            <button class="num" data-num="5">5</button>
+            <button class="num" data-num="6">6</button>
+            <button class="operator" data-action="subtract">−</button>
+            <button class="function" data-action="reciprocal">1/x</button>
+
+            <button class="num" data-num="1">1</button>
+            <button class="num" data-num="2">2</button>
+            <button class="num" data-num="3">3</button>
+            <button class="operator" data-action="add">+</button>
+            <button class="function" data-action="negate">±</button>
+
+            <button class="num" data-num="0">0</button>
+            <button class="num" data-num=".">.</button>
+            <button class="function" data-action="exp">e</button>
+            <button class="equals" data-action="equals" style="grid-column: span 2;">=</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ===== وضعیت =====
+    let currentInput = '0';      // رشته ورودی فعلی
+    let previousValue = null;    // مقدار قبلی
+    let operator = null;         // عملگر در انتظار
+    let waitingForOperand = false;
+    let memory = 0;
+    let angleMode = 'DEG';       // DEG یا RAD
+    let historyText = '';
+
+    // ===== عناصر DOM =====
+    const displayEl = document.getElementById('display');
+    const historyEl = document.getElementById('history');
+    const memIndicator = document.getElementById('memIndicator');
+    const angleIndicator = document.getElementById('angleIndicator');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.panel');
+
+    // ===== توابع کمکی =====
+    function toRad(deg) {
+        return deg * Math.PI / 180;
+    }
+
+    function fromRad(rad) {
+        return angleMode === 'DEG' ? rad * 180 / Math.PI : rad;
+    }
+
+    function formatNumber(num) {
+        if (!isFinite(num)) return 'خطا';
+        if (isNaN(num)) return 'خطا';
+        // جلوگیری از نمایش اعداد طولانی
+        let str = String(num);
+        if (str.length > 16) {
+            // نماد علمی برای اعداد خیلی بزرگ/کوچک
+            if (Math.abs(num) >= 1e15 || (Math.abs(num) < 1e-9 && num !== 0)) {
+                return num.toExponential(8).replace(/\.?0+e/, 'e');
+            }
+            let rounded = parseFloat(num.toPrecision(14));
+            return String(rounded);
+        }
+        return str;
+    }
+
+    function updateDisplay() {
+        let text = currentInput;
+        // جداکننده هزارگان (فقط بخش صحیح)
+        if (!isNaN(parseFloat(text)) && text !== 'خطا' && !text.includes('e')) {
+            let parts = text.split('.');
+            let intPart = parts[0];
+            let decPart = parts.length > 1 ? '.' + parts[1] : '';
+            // علامت منفی
+            let sign = '';
+            if (intPart.startsWith('-')) {
+                sign = '-';
+                intPart = intPart.slice(1);
+            }
+            if (/^\d+$/.test(intPart)) {
+                intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+            text = sign + intPart + decPart;
+        }
+        displayEl.textContent = text;
+
+        // تنظیم اندازه فونت
+        displayEl.classList.remove('small', 'tiny');
+        if (displayEl.textContent.length > 14) displayEl.classList.add('small');
+        if (displayEl.textContent.length > 20) displayEl.classList.add('tiny');
+
+        // تاریخچه
+        if (operator && previousValue !== null) {
+            const opSymbol = { add: '+', subtract: '−', multiply: '×', divide: '÷' }[operator] || operator;
+            historyEl.textContent = formatNumber(previousValue) + ' ' + opSymbol + ' ';
+        } else {
+            historyEl.innerHTML = '&nbsp;';
+        }
+
+        // نشانگرها
+        memIndicator.classList.toggle('active', memory !== 0);
+        angleIndicator.textContent = angleMode;
+    }
+
+    // ===== عملیات اصلی =====
+    function clearAll() {
+        currentInput = '0';
+        previousValue = null;
+        operator = null;
+        waitingForOperand = false;
+        historyText = '';
+        updateDisplay();
+    }
+
+    function inputDigit(digit) {
+        if (waitingForOperand) {
+            currentInput = digit;
+            waitingForOperand = false;
+        } else {
+            if (currentInput === '0' && digit !== '.') {
+                currentInput = digit;
+            } else {
+                if (currentInput.replace('-', '').replace('.', '').length >= 16) return;
+                currentInput += digit;
+            }
+        }
+        updateDisplay();
+    }
+
+    function inputDot() {
+        if (waitingForOperand) {
+            currentInput = '0.';
+            waitingForOperand = false;
+        } else if (!currentInput.includes('.')) {
+            currentInput += '.';
+        }
+        updateDisplay();
+    }
+
+    function backspace() {
+        if (waitingForOperand) return;
+        if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
+            currentInput = '0';
+        } else {
+            currentInput = currentInput.slice(0, -1);
+        }
+        updateDisplay();
+    }
+
+    function negate() {
+        if (currentInput === '0') return;
+        if (currentInput.startsWith('-')) {
+            currentInput = currentInput.slice(1);
+        } else {
+            currentInput = '-' + currentInput;
+        }
+        updateDisplay();
+    }
+
+    function percent() {
+        let val = parseFloat(currentInput);
+        if (isNaN(val)) return;
+        if (operator && previousValue !== null) {
+            // درصد نسبت به مقدار قبلی
+            currentInput = String(previousValue * val / 100);
+        } else {
+            currentInput = String(val / 100);
+        }
+        updateDisplay();
+    }
+
+    function compute(a, b, op) {
+        switch (op) {
+            case 'add': return a + b;
+            case 'subtract': return a - b;
+            case 'multiply': return a * b;
+            case 'divide':
+                if (b === 0) return NaN;
+                return a / b;
+            default: return b;
+        }
+    }
+
+    function performOperation(nextOperator) {
+        const inputValue = parseFloat(currentInput);
+
+        if (operator && waitingForOperand) {
+            operator = nextOperator;
+            updateDisplay();
+            return;
+        }
+
+        if (previousValue === null) {
+            previousValue = inputValue;
+        } else if (operator) {
+            const result = compute(previousValue, inputValue, operator);
+            previousValue = result;
+            currentInput = formatNumber(result);
+        }
+
+        waitingForOperand = true;
+        operator = nextOperator;
+        updateDisplay();
+    }
+
+    function equals() {
+        if (!operator || previousValue === null) return;
+        const inputValue = parseFloat(currentInput);
+        const result = compute(previousValue, inputValue, operator);
+        currentInput = formatNumber(result);
+        previousValue = null;
+        operator = null;
+        waitingForOperand = true;
+        historyEl.innerHTML = '&nbsp;';
+        updateDisplay();
+    }
+
+    // ===== توابع علمی =====
+    function applyScientific(fn) {
+        const x = parseFloat(currentInput);
+        if (isNaN(x) && fn !== 'rand' && fn !== 'pi' && fn !== 'e') return;
+        let result;
+
+        switch (fn) {
+            case 'sin':
+                result = Math.sin(angleMode === 'DEG' ? toRad(x) : x);
+                break;
+            case 'cos':
+                result = Math.cos(angleMode === 'DEG' ? toRad(x) : x);
+                break;
+            case 'tan':
+                result = Math.tan(angleMode === 'DEG' ? toRad(x) : x);
+                break;
+            case 'asin':
+                if (x < -1 || x > 1) { result = NaN; break; }
+                result = fromRad(Math.asin(x));
+                break;
+            case 'acos':
+                if (x < -1 || x > 1) { result = NaN; break; }
+                result = fromRad(Math.acos(x));
+                break;
+            case 'atan':
+                result = fromRad(Math.atan(x));
+                break;
+            case 'log':
+                if (x <= 0) { result = NaN; break; }
+                result = Math.log10(x);
+                break;
+            case 'ln':
+                if (x <= 0) { result = NaN; break; }
+                result = Math.log(x);
+                break;
+            case 'sqrt':
+                if (x < 0) { result = NaN; break; }
+                result = Math.sqrt(x);
+                break;
+            case 'power':
+                result = x * x;
+                break;
+            case 'reciprocal':
+                if (x === 0) { result = NaN; break; }
+                result = 1 / x;
+                break;
+            case 'fact':
+                if (x < 0 || !Number.isInteger(x)) { result = NaN; break; }
+                if (x > 170) { result = Infinity; break; }
+                result = 1;
+                for (let i = 2; i <= x; i++) result *= i;
+                break;
+            case 'pi':
+                result = Math.PI;
+                break;
+            case 'e':
+                result = Math.E;
+                break;
+            case 'abs':
+                result = Math.abs(x);
+                break;
+            case 'exp10':
+                result = Math.pow(10, x);
+                break;
+            case 'exp':
+                result = Math.exp(x);
+                break;
+            case 'round':
+                result = Math.round(x);
+                break;
+            case 'floor':
+                result = Math.floor(x);
+                break;
+            case 'ceil':
+                result = Math.ceil(x);
+                break;
+            case 'rand':
+                result = Math.random();
+                break;
+            case 'pow':
+                // x^y : منتظر عملوند دوم
+                previousValue = x;
+                operator = 'pow';
+                waitingForOperand = true;
+                historyEl.textContent = formatNumber(x) + ' ^ ';
+                return;
+            case 'root':
+                previousValue = x;
+                operator = 'root';
+                waitingForOperand = true;
+                historyEl.textContent = formatNumber(x) + ' ʸ√ ';
+                return;
+            default:
+                return;
+        }
+
+        if (!isFinite(result) && result !== Infinity && result !== -Infinity) {
+            currentInput = 'خطا';
+        } else if (result === Infinity || result === -Infinity) {
+            currentInput = 'خطا';
+        } else {
+            currentInput = formatNumber(result);
+        }
+        waitingForOperand = true;
+        updateDisplay();
+    }
+
+    // ===== عملیات حافظه =====
+    function memoryClear() {
+        memory = 0;
+        updateDisplay();
+    }
+
+    function memoryRecall() {
+        currentInput = formatNumber(memory);
+        waitingForOperand = false;
+        updateDisplay();
+    }
+
+    function memoryAdd() {
+        memory += parseFloat(currentInput) || 0;
+        waitingForOperand = true;
+        updateDisplay();
+    }
+
+    function memorySubtract() {
+        memory -= parseFloat(currentInput) || 0;
+        waitingForOperand = true;
+        updateDisplay();
+    }
+
+    function memoryStore() {
+        memory = parseFloat(currentInput) || 0;
+        waitingForOperand = true;
+        updateDisplay();
+    }
+
+    // ===== مدیریت رویدادها =====
+    function handleButtonClick(e) {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        // اعداد
+        if (btn.dataset.num !== undefined) {
+            if (btn.dataset.num === '.') {
+                inputDot();
+            } else {
+                inputDigit(btn.dataset.num);
+            }
+            return;
+        }
+
+        // عملگرها و توابع
+        const action = btn.dataset.action;
+        if (action) {
+            switch (action) {
+                case 'clear': clearAll(); break;
+                case 'backspace': backspace(); break;
+                case 'negate': negate(); break;
+                case 'percent': percent(); break;
+                case 'add':
+                case 'subtract':
+                case 'multiply':
+                case 'divide':
+                    performOperation(action);
+                    break;
+                case 'equals': equals(); break;
+                case 'sqrt': applyScientific('sqrt'); break;
+                case 'power': applyScientific('power'); break;
+                case 'reciprocal': applyScientific('reciprocal'); break;
+                case 'exp': applyScientific('exp'); break;
+                case 'mc': memoryClear(); break;
+                case 'mr': memoryRecall(); break;
+                case 'mplus': memoryAdd(); break;
+                case 'mminus': memorySubtract(); break;
+                case 'ms': memoryStore(); break;
+            }
+            return;
+        }
+
+        // دکمه‌های علمی
+        const sci = btn.dataset.sci;
+        if (sci) {
+            if (sci === 'angle') {
+                angleMode = angleMode === 'DEG' ? 'RAD' : 'DEG';
+                btn.textContent = angleMode;
+                updateDisplay();
+            } else {
+                applyScientific(sci);
+            }
+            return;
+        }
+    }
+
+    // ===== تب‌ها =====
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // ===== کلیک کلی روی ماشین حساب =====
+    document.querySelector('.calculator').addEventListener('click', handleButtonClick);
+
+    // ===== کیبورد =====
+    document.addEventListener('keydown', (e) => {
+        const key = e.key;
+
+        if (/^[0-9]$/.test(key)) {
+            inputDigit(key);
+            e.preventDefault();
+            return;
+        }
+
+        switch (key) {
+            case '.':
+            case ',':
+                inputDot();
+                e.preventDefault();
+                break;
+            case '+':
+                performOperation('add');
+                e.preventDefault();
+                break;
+            case '-':
+                performOperation('subtract');
+                e.preventDefault();
+                break;
+            case '*':
+            case '×':
+                performOperation('multiply');
+                e.preventDefault();
+                break;
+            case '/':
+            case '÷':
+                performOperation('divide');
+                e.preventDefault();
+                break;
+            case 'Enter':
+            case '=':
+                equals();
+                e.preventDefault();
+                break;
+            case 'Backspace':
+                backspace();
+                e.preventDefault();
+                break;
+            case 'Escape':
+            case 'c':
+            case 'C':
+                clearAll();
+                e.preventDefault();
+                break;
+            case '%':
+                percent();
+                e.preventDefault();
+                break;
+            case 'p':
+                applyScientific('pi');
+                e.preventDefault();
+                break;
+            case 'e':
+                applyScientific('e');
+                e.preventDefault();
+                break;
+            case 'r':
+                applyScientific('sqrt');
+                e.preventDefault();
+                break;
+            case 's':
+                applyScientific('sin');
+                e.preventDefault();
+                break;
+            case 'o':
+                applyScientific('cos');
+                e.preventDefault();
+                break;
+            case 't':
+                applyScientific('tan');
+                e.preventDefault();
+                break;
+            case 'l':
+                applyScientific('log');
+                e.preventDefault();
+                break;
+            case 'n':
+                applyScientific('ln');
+                e.preventDefault();
+                break;
+        }
+    });
+
+    // ===== آپدیت اولیه =====
+    updateDisplay();
+
+    // اطمینان از اینکه دکمه‌ها روی موبایل به درستی کار کنند
+    document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('touchstart', function() {}, { passive: true });
+    });
+
+})();
+</script>
+
+</body>
+</html>
